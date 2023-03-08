@@ -16,8 +16,7 @@ class FavoriteItemsCubit extends Cubit<FavoriteItemsState> {
   String userID;
 
   void initializeFavoriteItems() async {
-    List<Map<String, dynamic>> items =
-        await dataRepository.getFavoriteItems(userID);
+    List<CryptoCurrency> items = await dataRepository.getFavoriteItems(userID);
     emit(FavoriteItemsState(favoriteItems: items));
   }
 
@@ -25,7 +24,7 @@ class FavoriteItemsCubit extends Cubit<FavoriteItemsState> {
     bool isInList = await dataRepository.checkForFavoriteItem(currency, userID);
     if (!isInList) {
       await dataRepository.addFavoriteItem(currency, userID);
-      List<Map<String, dynamic>> items =
+      List<CryptoCurrency> items =
           await dataRepository.getFavoriteItems(userID);
       emit(FavoriteItemsState(favoriteItems: items));
     }
@@ -36,7 +35,7 @@ class FavoriteItemsCubit extends Cubit<FavoriteItemsState> {
         await dataRepository.checkForFavoriteItemSymbol(symbol, userID);
     if (!isInList) {
       await dataRepository.addFavoriteItemSymbol(name, symbol, userID);
-      List<Map<String, dynamic>> items =
+      List<CryptoCurrency> items =
           await dataRepository.getFavoriteItems(userID);
       emit(FavoriteItemsState(favoriteItems: items));
     }
@@ -47,7 +46,7 @@ class FavoriteItemsCubit extends Cubit<FavoriteItemsState> {
     if (isInList) {
       await dataRepository.removeFavoriteItem(currency, userID);
       await dataRepository.deleteNotificationSettings(currency.symbol, userID);
-      List<Map<String, dynamic>> items =
+      List<CryptoCurrency> items =
           await dataRepository.getFavoriteItems(userID);
       emit(FavoriteItemsState(favoriteItems: items));
     }
@@ -59,7 +58,7 @@ class FavoriteItemsCubit extends Cubit<FavoriteItemsState> {
     if (isInList) {
       await dataRepository.removeFavoriteItemSymbol(symbol, userID);
       await dataRepository.deleteNotificationSettings(symbol, userID);
-      List<Map<String, dynamic>> items =
+      List<CryptoCurrency> items =
           await dataRepository.getFavoriteItems(userID);
       emit(FavoriteItemsState(favoriteItems: items));
     }

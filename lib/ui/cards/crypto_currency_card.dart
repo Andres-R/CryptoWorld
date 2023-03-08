@@ -13,11 +13,13 @@ class CryptoCurrencyCard extends StatefulWidget {
     required this.cryptoCurrency,
     required this.isFavorited,
     required this.userID,
+    required this.showFavoriteStar,
   }) : super(key: key);
 
   final CryptoCurrency cryptoCurrency;
   final bool isFavorited;
   final String userID;
+  final bool showFavoriteStar;
 
   @override
   State<CryptoCurrencyCard> createState() => _CryptoCurrencyCardState();
@@ -179,44 +181,52 @@ class _CryptoCurrencyCardState extends State<CryptoCurrencyCard> {
                             ),
                           ],
                         ),
-                        const SizedBox(width: 4),
-                        GestureDetector(
-                          onTap: () async {
-                            bool isInList = await dr.checkForFavoriteItem(
-                              widget.cryptoCurrency,
-                              widget.userID,
-                            );
-                            setState(() {
-                              if (isInList) {
-                                isFavorited = false;
-                                BlocProvider.of<FavoriteItemsCubit>(context)
-                                    .removeFavoriteItem(
-                                  widget.cryptoCurrency,
-                                  widget.userID,
-                                );
-                              } else {
-                                isFavorited = true;
-                                BlocProvider.of<FavoriteItemsCubit>(context)
-                                    .addFavoriteItem(
-                                  widget.cryptoCurrency,
-                                  widget.userID,
-                                );
-                              }
-                            });
-                          },
-                          child: Container(
-                            height: 22,
-                            width: 22,
-                            color: Colors.transparent,
-                            child: Center(
-                              child: Icon(
-                                isFavorited ? Icons.star : Icons.star_outline,
-                                color: Colors.yellow,
-                                size: 22,
-                              ),
-                            ),
-                          ),
-                        ),
+                        widget.showFavoriteStar
+                            ? const SizedBox(width: 4)
+                            : Container(),
+                        widget.showFavoriteStar
+                            ? GestureDetector(
+                                onTap: () async {
+                                  bool isInList = await dr.checkForFavoriteItem(
+                                    widget.cryptoCurrency,
+                                    widget.userID,
+                                  );
+                                  setState(() {
+                                    if (isInList) {
+                                      isFavorited = false;
+                                      BlocProvider.of<FavoriteItemsCubit>(
+                                              context)
+                                          .removeFavoriteItem(
+                                        widget.cryptoCurrency,
+                                        widget.userID,
+                                      );
+                                    } else {
+                                      isFavorited = true;
+                                      BlocProvider.of<FavoriteItemsCubit>(
+                                              context)
+                                          .addFavoriteItem(
+                                        widget.cryptoCurrency,
+                                        widget.userID,
+                                      );
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  height: 22,
+                                  width: 22,
+                                  color: Colors.transparent,
+                                  child: Center(
+                                    child: Icon(
+                                      isFavorited
+                                          ? Icons.star
+                                          : Icons.star_outline,
+                                      color: Colors.yellow,
+                                      size: 22,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container(),
                       ],
                     ),
                   ],

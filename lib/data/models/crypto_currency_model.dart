@@ -1,5 +1,5 @@
 class CryptoCurrency {
-  final int id;
+  final String id;
   final String name;
   final String symbol;
   final dynamic price;

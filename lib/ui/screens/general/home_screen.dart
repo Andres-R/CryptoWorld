@@ -1,9 +1,7 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_world/cubit/favorite_items_cubit.dart';
+import 'package:crypto_world/data/models/crypto_currency_model.dart';
 import 'package:crypto_world/data/repository/data_repository.dart';
-import 'package:crypto_world/main.dart';
+import 'package:crypto_world/ui/cards/crypto_currency_card.dart';
 import 'package:crypto_world/ui/cards/favorite_item_card.dart';
 import 'package:crypto_world/ui/screens/general/crypto_currencies_list_screen.dart';
 import 'package:crypto_world/ui/screens/general/favorite_item_info_screen.dart';
@@ -98,80 +96,116 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const LogoCollection(),
                 SizedBox(height: kPadding * 2),
-                Padding(
-                  padding: EdgeInsets.all(kPadding),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Favorites',
-                        style: TextStyle(
-                          color: kTextColor,
-                          fontSize: 22,
+                BlocBuilder<FavoriteItemsCubit, FavoriteItemsState>(
+                  builder: (_, state) {
+                    if (state.favoriteItems.isEmpty) {
+                      return Container();
+                    }
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(kPadding),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Favorites',
+                                style: TextStyle(
+                                  color: kTextColor,
+                                  fontSize: 22,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                        ...List.generate(
+                          state.favoriteItems.length,
+                          (index) {
+                            CryptoCurrency currency =
+                                state.favoriteItems[index];
+                            return BlocProvider.value(
+                              value: _favoriteItemsCubit,
+                              child: CryptoCurrencyCard(
+                                isFavorited: true,
+                                cryptoCurrency: currency,
+                                userID: widget.userID,
+                                showFavoriteStar: false,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
                 ),
                 BlocBuilder<FavoriteItemsCubit, FavoriteItemsState>(
                   builder: (_, state) {
                     if (state.favoriteItems.isEmpty) {
-                      return Padding(
-                        padding: EdgeInsets.all(kPadding),
-                        child: Center(
-                          child: Text(
-                            'Add currencies to your favorites list and setup custom notifications',
-                            style: TextStyle(
-                              color: kAccentColor,
-                              fontSize: 18,
-                            ),
-                            textAlign: TextAlign.center,
+                      return Container();
+                    }
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(kPadding),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Management and Notifications',
+                                style: TextStyle(
+                                  color: kTextColor,
+                                  fontSize: 22,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    }
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: kPadding / 2),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            ...List.generate(
-                              state.favoriteItems.length,
-                              (index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (_) {
-                                          return BlocProvider.value(
-                                            value: _favoriteItemsCubit,
-                                            child: FavoriteItemInfoScreen(
-                                              name: state.favoriteItems[index]
-                                                  ['currencyName'],
-                                              symbol: state.favoriteItems[index]
-                                                  ['currencySymbol'],
-                                              isFavorited: true,
-                                              userID: widget.userID,
-                                              screenID: state
-                                                  .favoriteItems[index]['id'],
-                                            ),
-                                          );
-                                        },
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: kPadding / 2),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                ...List.generate(
+                                  state.favoriteItems.length,
+                                  (index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) {
+                                              return BlocProvider.value(
+                                                value: _favoriteItemsCubit,
+                                                child: FavoriteItemInfoScreen(
+                                                  name: state
+                                                      .favoriteItems[index]
+                                                      .name,
+                                                  symbol: state
+                                                      .favoriteItems[index]
+                                                      .symbol,
+                                                  isFavorited: true,
+                                                  userID: widget.userID,
+                                                  screenID: state
+                                                      .favoriteItems[index].id,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      child: FavoriteItemCard(
+                                        name: state.favoriteItems[index].name,
+                                        symbol:
+                                            state.favoriteItems[index].symbol,
                                       ),
                                     );
                                   },
-                                  child: FavoriteItemCard(
-                                    name: state.favoriteItems[index]
-                                        ['currencyName'],
-                                    symbol: state.favoriteItems[index]
-                                        ['currencySymbol'],
-                                  ),
-                                );
-                              },
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     );
                   },
                 ),

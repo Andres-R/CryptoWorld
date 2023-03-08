@@ -5,7 +5,7 @@ class FavoriteItemsState extends Equatable {
     required this.favoriteItems,
   });
 
-  final List<Map<String, dynamic>> favoriteItems;
+  final List<CryptoCurrency> favoriteItems;
 
   @override
   List<Object> get props => [favoriteItems];

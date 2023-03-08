@@ -11,7 +11,7 @@ class FavoriteItemInfoScreenCubit extends Cubit<FavoriteItemInfoScreenState> {
   }) : super(
           FavoriteItemInfoScreenState(
             cryptoCurrency: CryptoCurrency(
-              id: 1,
+              id: '1',
               name: 'name',
               symbol: 'symbol',
               price: 1.0,

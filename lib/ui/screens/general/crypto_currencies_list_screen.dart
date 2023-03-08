@@ -102,9 +102,9 @@ class _CryptoCurrenciesListScreenState
                               assets.length,
                               (index) {
                                 bool isFavorited = false;
-                                for (Map map in favoriteState.favoriteItems) {
-                                  if (map['currencySymbol'] ==
-                                      assets[index].symbol) {
+                                for (CryptoCurrency cc
+                                    in favoriteState.favoriteItems) {
+                                  if (cc.symbol == assets[index].symbol) {
                                     isFavorited = true;
                                   }
                                 }
@@ -116,6 +116,7 @@ class _CryptoCurrenciesListScreenState
                                     cryptoCurrency: currency,
                                     isFavorited: isFavorited,
                                     userID: widget.userID,
+                                    showFavoriteStar: true,
                                   ),
                                 );
                               },

@@ -62,6 +62,8 @@ class _CreateNotificationScreenState extends State<CreateNotificationScreen> {
       showCustomErrorDialog(context, 'Please enter a percentage!');
     } else if (percent[0] == '-') {
       showCustomErrorDialog(context, 'Cannot enter a negative percent!');
+    } else if (percent == '0.00') {
+      showCustomErrorDialog(context, 'Cannot enter 0 percent!');
     } else {
       double officialPercent = double.parse(percent);
       officialPercent *= criteria == 'down' ? -1.0 : 1.0;

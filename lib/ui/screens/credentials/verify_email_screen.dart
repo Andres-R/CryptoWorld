@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:crypto_world/ui/screens/general/router_screen.dart';
 import 'package:crypto_world/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -84,7 +83,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               title: Text(
                 'Verify Email',
                 style: TextStyle(
-                  color: kTextColor,
+                  color: kThemeColor,
                 ),
               ),
             ),
@@ -108,13 +107,24 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 children: [
                   Padding(
                     padding: EdgeInsets.all(kPadding / 2),
-                    child: Text(
-                      'A verification email has been sent to your email',
-                      style: TextStyle(
-                        color: kTextColor,
-                        fontSize: 24,
-                      ),
-                      textAlign: TextAlign.center,
+                    child: Column(
+                      children: [
+                        Text(
+                          'A verification email has been sent to ',
+                          style: TextStyle(
+                            color: kTextColor,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          FirebaseAuth.instance.currentUser!.email!,
+                          style: TextStyle(
+                            color: kThemeColor,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(height: kPadding * 2),
@@ -133,14 +143,11 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                         height: 55,
                         decoration: BoxDecoration(
                           color: kMainBGColor,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              kRadiusCurve + 5,
-                            ),
-                          ),
                           border: Border.all(
                             color: kThemeColor,
                           ),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(kRadiusCurve + 5)),
                         ),
                         child: Center(
                           child: Text(
@@ -159,16 +166,15 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     child: GestureDetector(
                       onTap: () {
                         FirebaseAuth.instance.signOut();
+                        Navigator.of(context)
+                            .popUntil((route) => route.isFirst);
                       },
                       child: Container(
                         height: 55,
                         decoration: BoxDecoration(
                           color: kMainBGColor,
                           borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              kRadiusCurve + 5,
-                            ),
-                          ),
+                              Radius.circular(kRadiusCurve + 5)),
                           border: Border.all(
                             color: kThemeColor,
                           ),

@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_world/data/models/crypto_currency_model.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 class DataRepository {
   Future createUser(
@@ -102,17 +106,125 @@ class DataRepository {
   }
 
   // works? [yes]
-  Future<List<Map<String, dynamic>>> getFavoriteItems(String userID) async {
+  Future<List<CryptoCurrency>> getFavoriteItems(String userID) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
         .collection('favorite_items')
         .where('userID', isEqualTo: userID)
         .get();
 
+    // this will return favorite items as maps from firebase
     List<Map<String, dynamic>> list = snapshot.docs.map((doc) {
       return doc.data(); // doc.data() is a Map<String, dynamic>
     }).toList();
-    return list;
+
+    // this will return favorite items as CryptoCurrency objects
+    // note: more data will be saved now other than just
+    //       {id: currencyName: currencySymbol: userID:}
+    List<CryptoCurrency> currencies = [];
+
+    String baseURL = "https://pro-api.coinmarketcap.com/v2";
+    String category = "/cryptocurrency/quotes/latest";
+    String parameter2 = "&CMC_PRO_API_KEY=";
+    String key2 = "1ee1f4c0-feb3-4e5e-8d9d-7efcbb7d2d12";
+
+    for (dynamic item in list) {
+      String parameter1 = "?symbol=${item['currencySymbol']}";
+      String endpoint = "$baseURL$category$parameter1$parameter2$key2";
+
+      CryptoCurrency cryptoCurrency = CryptoCurrency(
+        id: '1',
+        name: 'name',
+        symbol: 'symbol',
+        price: 'price',
+        percentChange1Hour: 'percentChange_1h',
+        percentChange24Hour: 'percentChange_24h',
+        percentChange7Day: 'percentChange_7d',
+        percentChange30Day: 'percentChange_30d',
+        percentChange60Day: 'percentChange_60d',
+        percentChange90Day: 'percentChange_90d',
+        marketCap: 'marketCap',
+        marketCapDominance: 'marketCapDominance',
+        fullyDilutedMarketCap: 'fullyDilutedMarketCap',
+        volume24h: 'volume24h',
+        percentVolumeChange24h: 'percentVolumeChange24h',
+        maxSupply: 'maxSupply',
+        circulatingSupply: 'circulatingSupply',
+        totalSupply: 'totalSupply',
+        cmcRank: 1,
+      );
+
+      try {
+        Uri uri = Uri.parse(endpoint);
+        Response response = await http.get(uri);
+        Map<String, dynamic> json = jsonDecode(response.body);
+        Map<String, dynamic> data = json['data'];
+
+        List<dynamic> info = data[item['currencySymbol']];
+
+        Map<String, dynamic> map = info[0];
+
+        // This id is from API request, we want the id for this
+        // currency to be the id from our database.
+        //
+        // int id = map['id'];
+
+        // This is the proper id we want. This id is from our database and is used to
+        // map notifications to screen when user clicks on favorite_item_card
+        String id = item['id'];
+
+        String name = map['name'];
+        String symbol = map['symbol'];
+
+        dynamic maxSupply = map['max_supply'];
+        dynamic circulatingSupply = map['circulating_supply'];
+        dynamic totalSupply = map['total_supply'];
+        dynamic cmcRank = map['cmc_rank'];
+
+        Map<String, dynamic> quote = map['quote'];
+        Map<String, dynamic> usd = quote['USD'];
+
+        dynamic price = usd['price'];
+        dynamic percentChange_1h = usd['percent_change_1h'];
+        dynamic percentChange_24h = usd['percent_change_24h'];
+        dynamic percentChange_7d = usd['percent_change_7d'];
+        dynamic percentChange_30d = usd['percent_change_30d'];
+        dynamic percentChange_60d = usd['percent_change_60d'];
+        dynamic percentChange_90d = usd['percent_change_90d'];
+        dynamic marketCap = usd['market_cap'];
+        dynamic marketCapDominance = usd['market_cap_dominance'];
+        dynamic fullyDilutedMarketCap = usd['fully_diluted_market_cap'];
+        dynamic volume24h = usd['volume_24h'];
+        dynamic percentVolumeChange24h = usd['volume_change_24h'];
+
+        cryptoCurrency = CryptoCurrency(
+          id: id,
+          name: name,
+          symbol: symbol,
+          price: price,
+          percentChange1Hour: percentChange_1h,
+          percentChange24Hour: percentChange_24h,
+          percentChange7Day: percentChange_7d,
+          percentChange30Day: percentChange_30d,
+          percentChange60Day: percentChange_60d,
+          percentChange90Day: percentChange_90d,
+          marketCap: marketCap,
+          marketCapDominance: marketCapDominance,
+          fullyDilutedMarketCap: fullyDilutedMarketCap,
+          volume24h: volume24h,
+          percentVolumeChange24h: percentVolumeChange24h,
+          maxSupply: maxSupply,
+          circulatingSupply: circulatingSupply,
+          totalSupply: totalSupply,
+          cmcRank: cmcRank,
+        );
+      } catch (e) {
+        print(e);
+      }
+      currencies.add(cryptoCurrency);
+    }
+
+    return currencies;
   }
 
   // works? [yes]

@@ -13,7 +13,7 @@ class DataService {
     String parameter1 = "?cryptocurrency_type=all";
     String parameter2 = "&CMC_PRO_API_KEY=";
 
-    String endpoint = "$baseURL$category$parameter1$parameter2$key1";
+    String endpoint = "$baseURL$category$parameter1$parameter2$key2";
     List<CryptoCurrency> currencies = [];
 
     try {
@@ -23,7 +23,7 @@ class DataService {
       List<dynamic> data = json['data'];
 
       for (dynamic item in data) {
-        int id = item['id'];
+        String id = item['id'].toString();
         String name = item['name'];
         String symbol = item['symbol'];
 
@@ -85,9 +85,9 @@ class DataService {
     String parameter1 = "?symbol=$cSymbol";
     String parameter2 = "&CMC_PRO_API_KEY=";
 
-    String endpoint = "$baseURL$category$parameter1$parameter2$key1";
+    String endpoint = "$baseURL$category$parameter1$parameter2$key2";
     CryptoCurrency cryptoCurrency = CryptoCurrency(
-      id: 1,
+      id: '1',
       name: 'name',
       symbol: 'symbol',
       price: 'price',
@@ -118,7 +118,7 @@ class DataService {
 
       Map<String, dynamic> map = info[0];
 
-      int id = map['id'];
+      String id = map['id'].toString();
       String name = map['name'];
       String symbol = map['symbol'];
 

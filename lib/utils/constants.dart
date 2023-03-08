@@ -13,7 +13,6 @@ Color kMainBGColor = Colors.black;
 Color kDarkBlue = const Color(0xFF081b4b);
 Color kSettingBlue = const Color(0xFF030c21);
 Color kThemeColor = Colors.blue;
-Color kBlueAccent = Colors.blueAccent;
 Color kTextColor = Colors.white;
 Color kAccentColor = Colors.grey;
 Color kCurrencyColor = Colors.green;
