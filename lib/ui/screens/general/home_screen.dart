@@ -149,7 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Row(
                             children: [
                               Text(
-                                'Management and Notifications',
+                                //'Management and Notifications',
+                                'Management and More',
                                 style: TextStyle(
                                   color: kTextColor,
                                   fontSize: 22,
