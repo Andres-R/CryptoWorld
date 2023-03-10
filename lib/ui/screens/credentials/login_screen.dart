@@ -58,11 +58,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: kMainBGColor,
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   elevation: 0,
+      //   backgroundColor: kMainBGColor,
+      //   centerTitle: true,
+      // ),
       body: Container(
         decoration: BoxDecoration(
           color: kMainBGColor,
@@ -70,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
+              kDarkBlue,
               kMainBGColor,
               kMainBGColor,
               kDarkBlue,
@@ -83,7 +84,20 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height / 4),
+                Container(
+                  color: Colors.transparent,
+                  height: MediaQuery.of(context).size.height / 8,
+                ),
+                Container(
+                  height: 250,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image:
+                          AssetImage('assets/logos/Crypto World Logo 500.png'),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(
                     kPadding,
@@ -201,12 +215,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: EdgeInsets.all(kPadding),
                   child: GestureDetector(
                     onTap: loginAsGuest,
-                    child: Container(
-                      color: kMainBGColor,
-                      child: Text(
-                        'Continue as guest',
-                        style: TextStyle(color: kTextColor),
-                      ),
+                    child: Text(
+                      'Continue as guest',
+                      style: TextStyle(color: kTextColor),
                     ),
                   ),
                 ),
