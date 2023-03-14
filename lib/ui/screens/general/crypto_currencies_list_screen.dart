@@ -99,7 +99,7 @@ class _CryptoCurrenciesListScreenState
                         return Column(
                           children: [
                             ...List.generate(
-                              assets.length,
+                              assets.length ~/ 2,
                               (index) {
                                 bool isFavorited = false;
                                 for (CryptoCurrency cc

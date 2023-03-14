@@ -6,6 +6,19 @@ import 'package:http/http.dart';
 class DataService {
   String key1 = "172d5f64-3e8e-42ed-8728-e3616d2a5ef9";
   String key2 = "1ee1f4c0-feb3-4e5e-8d9d-7efcbb7d2d12";
+  String key3 = "6971863c-0d2c-4a4a-a8ef-7cc712618a73";
+  String key4 = "9c33d992-236d-458c-8c57-01f8b7422e36";
+  String key5 = "e779b0e8-c8e0-4eff-8669-1e8a32b455bb";
+  String key6 = "8026fe7a-03dc-4717-b1a2-f48d65fa9926";
+  late List<String> mainKey = [
+    key1,
+    key2,
+    key3,
+    key4,
+    key5,
+    key6,
+  ];
+  int keyInc = 0;
 
   Future<List<CryptoCurrency>> getCryptoCurrencies() async {
     String baseURL = "https://pro-api.coinmarketcap.com/v1";
@@ -13,7 +26,8 @@ class DataService {
     String parameter1 = "?cryptocurrency_type=all";
     String parameter2 = "&CMC_PRO_API_KEY=";
 
-    String endpoint = "$baseURL$category$parameter1$parameter2$key2";
+    String endpoint =
+        "$baseURL$category$parameter1$parameter2${mainKey[(keyInc) % mainKey.length]}";
     List<CryptoCurrency> currencies = [];
 
     try {
@@ -75,7 +89,7 @@ class DataService {
     } catch (e) {
       throw e;
     }
-
+    keyInc++;
     return currencies;
   }
 
@@ -85,7 +99,8 @@ class DataService {
     String parameter1 = "?symbol=$cSymbol";
     String parameter2 = "&CMC_PRO_API_KEY=";
 
-    String endpoint = "$baseURL$category$parameter1$parameter2$key2";
+    String endpoint =
+        "$baseURL$category$parameter1$parameter2${mainKey[(keyInc) % mainKey.length]}";
     CryptoCurrency cryptoCurrency = CryptoCurrency(
       id: '1',
       name: 'name',
@@ -167,7 +182,7 @@ class DataService {
     } catch (e) {
       throw e;
     }
-
+    keyInc++;
     return cryptoCurrency;
   }
 }
